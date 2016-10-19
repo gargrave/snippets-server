@@ -1,0 +1,13 @@
+{
+  "name": "Snippets",
+  "description": "",
+  "image": "heroku/python",
+  "repository": "",
+  "keywords": [
+    "python",
+    "django"
+  ],
+  "addons": [
+    "heroku-postgresql"
+  ]
+}
