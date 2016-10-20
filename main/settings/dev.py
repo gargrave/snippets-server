@@ -16,7 +16,7 @@ DATABASES = {
 }
 
 CORS_ORIGIN_WHITELIST = (
-    'localhost:8080',
+    'localhost:3000',
 )
 
 # for dev builds, read the secret key from file
