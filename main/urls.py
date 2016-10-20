@@ -12,8 +12,8 @@ urlpatterns = [
     # admin view
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^api-auth/', include('rest_framework.urls',
-                               namespace='rest_framework')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-token-auth/', views.ObtainAuthToken.as_view()),
 
     url(r'^api/v1/', include('api_snippets_v1.urls', namespace='api_v1')),
 ]
