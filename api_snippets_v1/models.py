@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -18,6 +19,7 @@ class Snippet(BaseModel):
         ('gray', 'gray')
     )
 
+    owner = models.ForeignKey(User)
     title = models.CharField(max_length=255, default="Untitled Snippet")
     url = models.URLField(blank=False)
     color = models.CharField(max_length=20, default="white", choices=COLOR_CHOICES)
