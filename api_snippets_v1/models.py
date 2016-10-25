@@ -25,6 +25,7 @@ class Snippet(BaseModel):
     color = models.CharField(max_length=20, default="white", choices=COLOR_CHOICES)
     starred = models.BooleanField(default=False)
     archived = models.BooleanField(default=False)
+    pinned = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('title', 'url')
