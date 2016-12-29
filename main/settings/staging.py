@@ -14,4 +14,5 @@ DATABASES['default'].update(db_from_env)
 
 CORS_ORIGIN_WHITELIST = (
     'https://whispering-motion.surge.sh',
+    'whispering-motion.surge.sh',
 )
