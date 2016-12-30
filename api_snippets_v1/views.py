@@ -20,7 +20,26 @@ class SnippetList(generics.ListCreateAPIView):
     serializer_class = SnippetSerializer
 
     def get(self, request, *args, **kwargs):
-        self.queryset = Snippet.objects.filter(owner__pk=self.request.user.pk)
+        self.queryset = Snippet.objects\
+            .filter(owner__pk=self.request.user.pk)\
+            .exclude(archived=True)
+        return self.list(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class ArchivedSnippetList(generics.ListCreateAPIView):
+    """
+    Concrete view for listing a queryset or creating a model instance.
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = SnippetSerializer
+
+    def get(self, request, *args, **kwargs):
+        self.queryset = Snippet.objects\
+            .filter(owner__pk=self.request.user.pk)\
+            .exclude(archived=False)
         return self.list(request, *args, **kwargs)
 
     def perform_create(self, serializer):
