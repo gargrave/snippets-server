@@ -46,6 +46,23 @@ class ArchivedSnippetList(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 
+class StarredSnippetList(generics.ListCreateAPIView):
+    """
+    Concrete view for listing a queryset or creating a model instance.
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = SnippetSerializer
+
+    def get(self, request, *args, **kwargs):
+        self.queryset = Snippet.objects\
+            .filter(owner__pk=self.request.user.pk)\
+            .exclude(starred=False)
+        return self.list(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Snippet.objects.all()
