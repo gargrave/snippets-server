@@ -6,9 +6,6 @@ from api_snippets_v1 import views, views_auth
 admin.autodiscover()
 
 urlpatterns = [
-    # index view--basically just a blank page
-    url(r'^$', views.index, name='index'),
-
     # admin view
     url(r'^admin/', include(admin.site.urls)),
 
