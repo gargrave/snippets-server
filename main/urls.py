@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
     # django-rest-auth URLs
+    # overriding /user/ to use our customized version
+    url(r'^rest-auth/user/', views_auth.UserDetailsView.as_view()),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
 

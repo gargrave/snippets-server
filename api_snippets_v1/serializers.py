@@ -1,7 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from .models import Snippet
+
+# Get the UserModel
+UserModel = get_user_model()
 
 
 class SnippetSerializer(serializers.ModelSerializer):
@@ -12,7 +16,16 @@ class SnippetSerializer(serializers.ModelSerializer):
                   'created', 'modified')
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserDetailsSerializer(serializers.ModelSerializer):
+    """
+    User model w/o password
+
+    NOTE: This is an override for django-rest-auth's default
+        UserDetailsSerializer class, in order to provide more
+        details about the user.
+    """
     class Meta:
-        model = User
-        fields = ('id', 'username', 'first_name', 'last_name')
+        model = UserModel
+        fields = ('pk', 'username', 'email', 'first_name',
+                  'last_name', 'date_joined', 'last_login')
+        read_only_fields = ('email',)
