@@ -16,6 +16,7 @@ urlpatterns = [
     # overriding /user/ to use our customized version
     url(r'^rest-auth/user/', views_auth.UserDetailsView.as_view()),
     url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/registration/usercheck', views_auth.UserExistsCheck.as_view()),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
 
     url(r'^api/v1/', include('api_snippets_v1.urls', namespace='api_v1')),

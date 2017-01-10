@@ -1,12 +1,30 @@
 from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.views.generic import View
 
-from rest_framework import generics, mixins, parsers, permissions, renderers
+from rest_framework import generics, mixins, parsers, permissions, renderers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from .serializers import UserDetailsSerializer
+
+
+class UserExistsCheck(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+
+    def get(self, request, *args, **kwargs):
+        print(request.GET.get('username'))
+        content = {}
+        try:
+            username = request.GET.get('username')
+            User.objects.get(username=username)
+            content = {'user': username}
+        except User.DoesNotExist:
+            pass
+        return Response(content)
 
 
 class ObtainAuthToken(APIView):
