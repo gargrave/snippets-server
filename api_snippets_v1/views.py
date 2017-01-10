@@ -8,10 +8,6 @@ from .models import Snippet
 from .serializers import SnippetSerializer
 
 
-def index(request):
-    return render(request, 'index.html')
-
-
 class SnippetList(generics.ListCreateAPIView):
     """
     Concrete view for listing a queryset or creating a model instance.
