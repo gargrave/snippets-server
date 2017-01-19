@@ -14,6 +14,6 @@ DATABASES['default'].update(db_from_env)
 
 CORS_ORIGIN_WHITELIST = (
     'https://whispering-motion.surge.sh',
-    'https://snippets-app.com',
+    'https://www.snippets-app.com',
     'https://gargrave-snippets-dev.netlify.com'
 )
