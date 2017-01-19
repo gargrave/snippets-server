@@ -17,5 +17,4 @@ CORS_ORIGIN_WHITELIST = (
     'https://www.snippets-app.com',
     'www.snippets-app.com',
     'snippets-app.com',
-    'https://gargrave-snippets-dev.netlify.com'
 )
