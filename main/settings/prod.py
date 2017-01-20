@@ -17,4 +17,3 @@ CORS_ORIGIN_WHITELIST = (
     'www.snippets-app.com',
     'snippets-app.com',
 )
-# a
