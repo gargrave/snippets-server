@@ -1,11 +1,13 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from api_snippets_v1 import views, views_auth
+from api_snippets_v1 import views, views_auth, views_templates
 
 admin.autodiscover()
 
 urlpatterns = [
+    url(r'^$', views_templates.Index.as_view(), name='index'),
+
     # admin view
     url(r'^admin/', include(admin.site.urls)),
 

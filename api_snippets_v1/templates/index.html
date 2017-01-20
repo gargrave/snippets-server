@@ -1,10 +1,38 @@
-{% extends "base.html" %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
 
-{% block content %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>
+    Snippets
+    {% if is_staging %}(staging){% endif %}
+    {% if is_dev %}(dev){% endif %}
+  </title>
+  <link rel="stylesheet" href="{% static 'milligram.min.css' %}">
+</head>
 
-  <div class="container" style="margin-top: 24px; text-align: center;">
+<body class="container" style="padding-top: 150px;">
+<div class="row">
+  <div class="column" style="text-align: center; width: 100%">
     <h1>Snippets</h1>
-    <h2>...is not here...</h2>
-  </div>
+    <p>
+      v. {{ version }}
+      {% if is_staging %}(staging){% endif %}
+      {% if is_dev %}-dev{% endif %}
+      {% if is_debug %}-debug{% endif %}
+    </p>
 
-{% endblock %}
+    <p>
+      {% if is_staging or is_dev %}
+        <a href="/admin">Admin</a> |
+        <a href="/api/v1/snippets">API.Snippets</a>
+      {% endif %}
+    </p>
+  </div>
+</div>
+</body>
+
+</html>
