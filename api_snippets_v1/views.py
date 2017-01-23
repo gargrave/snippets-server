@@ -16,9 +16,17 @@ class SnippetList(generics.ListCreateAPIView):
     serializer_class = SnippetSerializer
 
     def get(self, request, *args, **kwargs):
-        self.queryset = Snippet.objects\
-            .filter(owner__pk=self.request.user.pk)\
-            .exclude(archived=True)
+        # if a 'search' query param is provided, filter by that value
+        search_query = request.GET.get('search', '')
+
+        if search_query == '':
+            self.queryset = Snippet.objects\
+                .filter(owner__pk=self.request.user.pk)\
+                .exclude(archived=True)
+        else:
+            self.queryset = Snippet.objects \
+                .filter(owner__pk=self.request.user.pk) \
+                .filter(title__icontains=search_query)
         return self.list(request, *args, **kwargs)
 
     def perform_create(self, serializer):
