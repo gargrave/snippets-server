@@ -8,7 +8,8 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
-from .serializers import UserDetailsSerializer
+from .models import UserProfile
+from .serializers import UserDetailsSerializer, UserProfileSerializer
 
 
 class UserExistsCheck(APIView):
@@ -16,7 +17,6 @@ class UserExistsCheck(APIView):
     permission_classes = ()
 
     def get(self, request, *args, **kwargs):
-        print(request.GET.get('username'))
         content = {}
         try:
             username = request.GET.get('username')
@@ -25,6 +25,21 @@ class UserExistsCheck(APIView):
         except User.DoesNotExist:
             pass
         return Response(content)
+
+
+class UserProfileDetailsView(generics.RetrieveUpdateAPIView):
+    """
+    View for accessing a user's Profile.
+    """
+    serializer_class = UserProfileSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return self.get_queryset()
+
+    def get_queryset(self):
+        user, created = UserProfile.objects.get_or_create(owner=self.request.user)
+        return user
 
 
 class UserDetailsView(generics.RetrieveUpdateAPIView):

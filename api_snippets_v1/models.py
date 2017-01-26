@@ -7,6 +7,17 @@ class BaseModel(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
 
+class UserProfile(BaseModel):
+    """
+    Basic profile to attach to user accounts. Used for storing
+    information and preferences for a user that are not a part of
+    the user/auth model.
+    """
+    owner = models.ForeignKey(User)
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+
+
 class Snippet(BaseModel):
     COLOR_CHOICES = (
         ('white', 'white'),

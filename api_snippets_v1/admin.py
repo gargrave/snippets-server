@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from .models import Snippet
+from .models import Snippet, UserProfile
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'first_name', 'last_name', 'owner')
 
 
 @admin.register(Snippet)

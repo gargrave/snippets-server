@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Snippet
+from .models import Snippet, UserProfile
 
 # Get the UserModel
 UserModel = get_user_model()
@@ -16,6 +16,12 @@ class SnippetSerializer(serializers.ModelSerializer):
                   'created', 'modified')
 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ('pk', 'first_name', 'last_name')
+
+
 class UserDetailsSerializer(serializers.ModelSerializer):
     """
     User model w/o password
@@ -26,6 +32,5 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = UserModel
-        fields = ('pk', 'username', 'email', 'first_name',
-                  'last_name', 'date_joined', 'last_login')
+        fields = ('pk', 'username', 'email', 'date_joined', 'last_login')
         read_only_fields = ('email',)
