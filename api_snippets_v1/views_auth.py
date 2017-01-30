@@ -12,14 +12,29 @@ from .models import UserProfile
 from .serializers import UserDetailsSerializer, UserProfileSerializer
 
 
+class EmailExistsCheck(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+
+    def post(self, request, *args, **kwargs):
+        content = {}
+        try:
+            email = request.data.get('email')
+            User.objects.get(email=email)
+            content = {'email': email}
+        except User.DoesNotExist:
+            pass
+        return Response(content)
+
+
 class UserExistsCheck(APIView):
     throttle_classes = ()
     permission_classes = ()
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         content = {}
         try:
-            username = request.GET.get('username')
+            username = request.data.get('username')
             User.objects.get(username=username)
             content = {'user': username}
         except User.DoesNotExist:
