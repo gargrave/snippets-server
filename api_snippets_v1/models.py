@@ -3,6 +3,9 @@ from django.db import models
 
 
 class BaseModel(models.Model):
+    """
+    Base model for basic fields that most Models will use.
+    """
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
@@ -19,6 +22,9 @@ class UserProfile(BaseModel):
 
 
 class Snippet(BaseModel):
+    """
+    Model for a single Snippet instance.
+    """
     COLOR_CHOICES = (
         ('white', 'white'),
         ('red', 'red'),
@@ -38,5 +44,38 @@ class Snippet(BaseModel):
     archived = models.BooleanField(default=False)
     pinned = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         unique_together = ('title', 'url')
+
+
+class Tag(BaseModel):
+    """
+    A basic tag model to allow a user to tag Snippets.
+
+    Note that the Tag model itself does not contain any references to
+    its associated Snippet(s). This is done in the TagSnippetRelation model.
+    """
+    owner = models.ForeignKey(User)
+    title = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        unique_together = ('owner', 'title')
+
+
+class TagSnippetRelation(BaseModel):
+    """
+    A relation tying a Tag to a Snippet.
+    """
+    owner = models.ForeignKey(User)
+    _tag = models.ForeignKey(Tag)
+    _snippet = models.ForeignKey(Snippet, related_name="tags")
+
+    def __str__(self):
+        return str(self._tag)
+

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Snippet, UserProfile
+from .models import Snippet, Tag, TagSnippetRelation, UserProfile
 
 
 @admin.register(UserProfile)
@@ -14,3 +14,13 @@ class SnippetAdmin(admin.ModelAdmin):
         'id', 'title', 'url', 'color',
         'pinned', 'starred', 'archived',
         'created', 'modified')
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('id', 'owner', 'title')
+
+
+@admin.register(TagSnippetRelation)
+class TagSnippetRelationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'owner', '_tag', '_snippet')
