@@ -8,6 +8,12 @@ from .models import Snippet, Tag, TagSnippetRelation, UserProfile
 UserModel = get_user_model()
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('id', 'title')
+
+
 class TagRelatedField(serializers.RelatedField):
     """
     Custom RelatedField serializer for Tags. Simply returns the title of the Tag.
