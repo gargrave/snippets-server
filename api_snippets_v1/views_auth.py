@@ -1,12 +1,8 @@
 from django.contrib.auth.models import User
-from django.http import HttpResponse
-from django.views.generic import View
 
-from rest_framework import generics, mixins, parsers, permissions, renderers, status
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from .models import UserProfile
 from .serializers import UserDetailsSerializer, UserProfileSerializer
@@ -53,7 +49,8 @@ class UserProfileDetailsView(generics.RetrieveUpdateAPIView):
         return self.get_queryset()
 
     def get_queryset(self):
-        user, created = UserProfile.objects.get_or_create(owner=self.request.user)
+        user, created = UserProfile.objects.get_or_create(
+            owner=self.request.user)
         return user
 
 
@@ -74,11 +71,3 @@ class UserDetailsView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
-
-    def get_queryset(self):
-        """
-        Adding this method since it is sometimes called when using
-        django-rest-swagger
-        https://github.com/Tivix/django-rest-auth/issues/275
-        """
-        return get_user_model().objects.none()

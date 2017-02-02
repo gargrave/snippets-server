@@ -1,8 +1,4 @@
-from django.contrib.auth.models import User
-from django.shortcuts import render
-
-from rest_framework import generics, mixins, parsers, permissions, renderers
-from rest_framework.response import Response
+from rest_framework import generics, permissions
 
 from .models import Snippet
 from .serializers import SnippetSerializer

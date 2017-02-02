@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from .models import Snippet, Tag, TagSnippetRelation, UserProfile
@@ -9,6 +8,7 @@ UserModel = get_user_model()
 
 
 class TagSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Tag
         fields = ('id', 'title')
@@ -18,6 +18,7 @@ class TagRelatedField(serializers.RelatedField):
     """
     Custom RelatedField serializer for Tags. Simply returns the title of the Tag.
     """
+
     def to_representation(self, value):
         return value.title
 
@@ -47,6 +48,7 @@ class SnippetSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = UserProfile
         fields = ('pk', 'first_name', 'last_name')

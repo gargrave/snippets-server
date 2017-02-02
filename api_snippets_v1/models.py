@@ -39,7 +39,9 @@ class Snippet(BaseModel):
     owner = models.ForeignKey(User)
     title = models.CharField(max_length=255, default="Untitled Snippet")
     url = models.URLField(blank=False)
-    color = models.CharField(max_length=20, default="white", choices=COLOR_CHOICES)
+    color = models.CharField(max_length=20,
+                             default="white",
+                             choices=COLOR_CHOICES)
     starred = models.BooleanField(default=False)
     archived = models.BooleanField(default=False)
     pinned = models.BooleanField(default=False)
@@ -79,3 +81,5 @@ class TagSnippetRelation(BaseModel):
     def __str__(self):
         return str(self._tag)
 
+    class Meta:
+        unique_together = ('owner', '_tag', '_snippet')
