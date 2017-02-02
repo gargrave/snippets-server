@@ -22,8 +22,23 @@ class TagRelatedField(serializers.RelatedField):
     def to_representation(self, value):
         return value.title
 
+    def to_internal_value(self, data):
+        # simply implementing to get rid of linting warnings
+        pass
 
-class TagSnippetRelationSerializer(serializers.ModelSerializer):
+
+class TagSnippetRelationWriteSerializer(serializers.ModelSerializer):
+    """
+    Basic serializer for TagSnippetRelation. User this one for writing, as it
+    will only be concerned with the IDs of its related fields;
+    no special relational binding.
+    """
+    class Meta:
+        model = TagSnippetRelation
+        fields = ('id', '_tag', '_snippet')
+
+
+class TagSnippetRelationReadSerializer(serializers.ModelSerializer):
     """
     Custom serializer for TagSnippetRelation. Note that this also uses
     the custom TagRelatedField to build a front-end friendly version of
@@ -38,7 +53,7 @@ class TagSnippetRelationSerializer(serializers.ModelSerializer):
 
 class SnippetSerializer(serializers.ModelSerializer):
     # use the custom serializer to build a tag list
-    tags = TagSnippetRelationSerializer(many=True)
+    tags = TagSnippetRelationReadSerializer(many=True)
 
     class Meta:
         model = Snippet

@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^snippets/(?P<pk>[0-9]+)/?$', views.SnippetDetail.as_view()),
 
     url(r'^tags/?$', views_tags.TagList.as_view()),
+    url(r'^tags/add/?$', views_tags.TagSnippetRelationCreateView.as_view()),
 ]
