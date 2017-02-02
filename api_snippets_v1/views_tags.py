@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
-from .models import Tag
+from .models import Tag, TagSnippetRelation
 from .serializers import TagSerializer, TagSnippetRelationWriteSerializer
 
 
@@ -58,3 +58,28 @@ class TagSnippetRelationCreateView(generics.CreateAPIView):
         return Response(res_data,
                         status=status.HTTP_201_CREATED,
                         headers=headers)
+
+
+class TagSnippetRelationDeleteView(generics.GenericAPIView):
+    """
+    Concrete view for deleting a TagSnippetRelation instance.
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return TagSnippetRelation.objects\
+            .filter(owner__pk=self.request.user.pk)
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            # find the Snippet that matches owner/tag/snippet ids
+            tag_id = request.data.get('tag_id')
+            snippet_id = request.data.get('snippet_id')
+            instance = TagSnippetRelation.objects.filter(
+                owner__pk=request.user.pk,
+                _tag__pk=tag_id,
+                _snippet__pk=snippet_id).get()
+            instance.delete()
+        except TagSnippetRelation.DoesNotExist:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
