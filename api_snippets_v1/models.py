@@ -79,7 +79,8 @@ class TagSnippetRelation(BaseModel):
     _snippet = models.ForeignKey(Snippet, related_name="tags")
 
     def __str__(self):
-        return str(self._tag)
+        return 'Snippet: {} | Tag: {}'.format(
+            str(self._snippet), str(self._tag))
 
     class Meta:
         unique_together = ('owner', '_tag', '_snippet')
