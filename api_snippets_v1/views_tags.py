@@ -24,10 +24,13 @@ class TagList(generics.ListCreateAPIView):
 class TagSnippetRelationCreateView(generics.CreateAPIView):
     """
     Creates a new TagSnippetRelation from the request.
-    Request should contain only the IDs of the associated objects, like:
+    Request should look like the following. It must contain at least one of the
+    two optional fields:
+
     {
-        _tag: 35,
-        _snippet: 40
+        _tag: 35 (optional, to use an existing Tag),
+        _snippet: 40 (required),
+        tag_title: (optional, to create a new tag with this title)
     }
     """
     permission_classes = (permissions.IsAuthenticated,)
@@ -41,9 +44,25 @@ class TagSnippetRelationCreateView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         """
-        Override of default create() method to provide a different Response body
+        Override of default create() method to
+        provide heavily customized behavior
         """
-        serializer = self.get_serializer(data=request.data)
+        # build custom dataset for the serializer based on the type of request
+        tag_id_for_serializer = request.data.get('_tag')
+        # if a 'tag_title' was provided in the request, we will use that
+        # for the lookup, and create a new Tag if necessary
+        if request.data.get('tag_title'):
+            tag, created = Tag.objects.get_or_create(
+                owner=request.user,
+                title=request.data.get('tag_title'))
+            tag_id_for_serializer = tag.pk
+        snippet_id_for_serializer = request.data.get('_snippet')
+        serializer_data = {
+            '_tag': tag_id_for_serializer,
+            '_snippet': snippet_id_for_serializer,
+        }
+        # now use these settings to create a new TagSnippetRelation
+        serializer = self.get_serializer(data=serializer_data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
@@ -53,7 +72,10 @@ class TagSnippetRelationCreateView(generics.CreateAPIView):
         tag_id = serializer.data.get('_tag')
         res_data = {
             'id': tag_id,
-            '_tag': str(Tag.objects.get(pk=tag_id))
+            '_tag': {
+                'id': Tag.objects.get(pk=tag_id).pk,
+                'title': Tag.objects.get(pk=tag_id).title
+            }
         }
         return Response(res_data,
                         status=status.HTTP_201_CREATED,
