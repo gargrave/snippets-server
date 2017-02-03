@@ -20,7 +20,10 @@ class TagRelatedField(serializers.RelatedField):
     """
 
     def to_representation(self, value):
-        return value.title
+        return {
+            'id': value.pk,
+            'title': value.title
+        }
 
     def to_internal_value(self, data):
         # simply implementing to get rid of linting warnings
