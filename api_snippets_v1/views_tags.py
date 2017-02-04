@@ -48,38 +48,64 @@ class TagSnippetRelationCreateView(generics.CreateAPIView):
         provide heavily customized behavior
         """
         # build custom dataset for the serializer based on the type of request
-        tag_id_for_serializer = request.data.get('_tag')
-        # if a 'tag_title' was provided in the request, we will use that
-        # for the lookup, and create a new Tag if necessary
-        if request.data.get('tag_title'):
-            tag, created = Tag.objects.get_or_create(
-                owner=request.user,
-                title=request.data.get('tag_title'))
-            tag_id_for_serializer = tag.pk
-        snippet_id_for_serializer = request.data.get('_snippet')
-        serializer_data = {
-            '_tag': tag_id_for_serializer,
-            '_snippet': snippet_id_for_serializer,
-        }
-        # now use these settings to create a new TagSnippetRelation
-        serializer = self.get_serializer(data=serializer_data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
+        request_tag_id = request.data.get('_tag')
+        request_snippet_id = request.data.get('_snippet')
 
-        # modify the contents of the response body to match
-        # what the client expects
-        tag_id = serializer.data.get('_tag')
-        res_data = {
-            'id': tag_id,
-            '_tag': {
-                'id': Tag.objects.get(pk=tag_id).pk,
-                'title': Tag.objects.get(pk=tag_id).title
+        ########################################################
+        # Look for an existing identical entry before creating
+        ########################################################
+        try:
+            # look for an existing TagSnippetRelation with these values
+            existing_entry = TagSnippetRelation.objects.filter(
+                owner__pk=self.request.user.pk,
+                _tag=request_tag_id,
+                _snippet=request_snippet_id
+            ).get()
+            # if found, get the associate Tag object
+            existing_entry_tag = Tag.objects.filter(
+                owner__pk=self.request.user.pk,
+                pk=request_tag_id).get()
+            # manually build a response and simply send back the found data
+            return Response({
+                'id': existing_entry.pk,
+                '_tag': {
+                    'id': existing_entry_tag.pk,
+                    'title': existing_entry_tag.title
+                }
+            }, status=status.HTTP_200_OK)
+        ########################################################
+        # Create a new entry if none was found
+        ########################################################
+        except TagSnippetRelation.DoesNotExist:
+            # if a 'tag_title' was provided in the request, we will use that
+            # for the lookup, and create a new Tag if necessary
+            if request.data.get('tag_title'):
+                tag, created = Tag.objects.get_or_create(
+                    owner=request.user,
+                    title=request.data.get('tag_title'))
+                request_tag_id = tag.pk
+            new_entry_data = {
+                '_tag': request_tag_id,
+                '_snippet': request_snippet_id,
             }
-        }
-        return Response(res_data,
-                        status=status.HTTP_201_CREATED,
-                        headers=headers)
+            # now use these settings to create a new TagSnippetRelation
+            serializer = self.get_serializer(data=new_entry_data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+
+            # manually build a response and simply send back the Tag data
+            tag_obj = Tag.objects.get(pk=serializer.data.get('_tag'))
+            res_data = {
+                'id': serializer.data.get('id'),
+                '_tag': {
+                    'id': tag_obj.pk,
+                    'title': tag_obj.title
+                }
+            }
+            return Response(res_data,
+                            status=status.HTTP_201_CREATED,
+                            headers=headers)
 
 
 class TagSnippetRelationDeleteView(generics.GenericAPIView):
