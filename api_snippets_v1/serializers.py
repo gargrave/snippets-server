@@ -7,6 +7,9 @@ from .models import Snippet, Tag, TagSnippetRelation, UserProfile
 UserModel = get_user_model()
 
 
+########################################################
+# Tag Serializers
+########################################################
 class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -54,9 +57,12 @@ class TagSnippetRelationReadSerializer(serializers.ModelSerializer):
         fields = ('id', '_tag')
 
 
+########################################################
+# Snippet Serializers
+########################################################
 class SnippetSerializer(serializers.ModelSerializer):
     # use the custom serializer to build a tag list
-    tags = TagSnippetRelationReadSerializer(many=True)
+    tags = TagSnippetRelationReadSerializer(many=True, read_only=True)
 
     class Meta:
         model = Snippet
@@ -65,6 +71,9 @@ class SnippetSerializer(serializers.ModelSerializer):
                   'created', 'modified')
 
 
+########################################################
+# User/Auth Serializers
+########################################################
 class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
