@@ -21,6 +21,19 @@ class TagList(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 
+class TagDeleteView(generics.DestroyAPIView):
+    """
+    Concrete view for deleting an existing Tag, along with all of its
+    associated TagSnippetRelations.
+
+    URL looks like:
+    api/v1/tags/delete/<pk>
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = TagSerializer
+    queryset = Tag.objects.all()
+
+
 class TagSnippetRelationCreateView(generics.CreateAPIView):
     """
     Creates a new TagSnippetRelation from the request.

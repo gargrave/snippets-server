@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^tags/?$', views_tags.TagList.as_view()),
     url(r'^tags/add/?$', views_tags.TagSnippetRelationCreateView.as_view()),
     url(r'^tags/remove/?$', views_tags.TagSnippetRelationDeleteView.as_view()),
+    url(r'^tags/delete/(?P<pk>[0-9]+)/?$', views_tags.TagDeleteView.as_view()),
 ]
