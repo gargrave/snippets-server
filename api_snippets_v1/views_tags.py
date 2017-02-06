@@ -8,14 +8,23 @@ from .serializers import TagSerializer, TagSnippetRelationWriteSerializer
 class TagList(generics.ListCreateAPIView):
     """
     Concrete view for listing a queryset or creating a model instance.
+
+    URL looks like:
+    api/v1/tags/
+
+    GET request to list a user's Tags
+    POST request with Tag data to create a Tag
+
+    Payload for creating a Tag should conform to the following:
+    {
+        title: [string, max=100]
+    }
     """
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = TagSerializer
 
-    def get(self, request, *args, **kwargs):
-        self.queryset = Tag.objects \
-            .filter(owner__pk=self.request.user.pk)
-        return self.list(request, *args, **kwargs)
+    def get_queryset(self):
+        return Tag.objects.filter(owner=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -31,19 +40,22 @@ class TagDeleteView(generics.DestroyAPIView):
     """
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = TagSerializer
-    queryset = Tag.objects.all()
+
+    def get_queryset(self):
+        return Tag.objects.filter(owner=self.request.user)
 
 
 class TagSnippetRelationCreateView(generics.CreateAPIView):
     """
-    Creates a new TagSnippetRelation from the request.
-    Request should look like the following. It must contain at least one of the
-    two optional fields:
+    Concrete view for creating a new TagSnippetRelation (i.e. adding an existing
+    Tag to an existing Snippet).
 
+    POST request should look like the following.
+    It must contain at least one of the two optional fields:
     {
-        _tag: 35 (optional, to use an existing Tag),
-        _snippet: 40 (required),
-        tag_title: (optional, to create a new tag with this title)
+        _tag: [number] (optional, pk of an existing Tag)
+        _snippet: [number] (required, pk of an existing Snippet)
+        tag_title: [string, max=100] (optional, to create a new Tag)
     }
     """
     permission_classes = (permissions.IsAuthenticated,)
