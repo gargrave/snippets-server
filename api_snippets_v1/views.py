@@ -33,7 +33,15 @@ class SnippetList(generics.ListCreateAPIView):
 class SnippetAdvancedSearch(mixins.ListModelMixin,
                             generics.GenericAPIView):
     """
-    Concrete view for listing a queryset or creating a model instance.
+    Concrete view for listing Snippets based on multiple search criteria.
+
+    POST request should take the following form (all fields are optional,
+        and if no fields are provided, the list will simply be all Snippets).
+    {
+        title: [string]
+        tags: [string] (comma-separated list of strings to search by; any empty
+            or whitespace string are ignored)
+    }
     """
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = SnippetSerializer
@@ -43,23 +51,21 @@ class SnippetAdvancedSearch(mixins.ListModelMixin,
         search_by_title = request.data.get('title', '')
         search_by_tags = request.data.get('tags', '')
 
-        # TODO clean this up
-        if search_by_title != '' and search_by_tags == '':
-            self.queryset = Snippet.objects \
-                .filter(owner=self.request.user,
-                        title__icontains=search_by_title)
-        elif search_by_title == '' and search_by_tags != '':
-            self.queryset = Snippet.objects \
-                .filter(owner=self.request.user,
-                        tags___tag__title__iexact=search_by_tags)
-        elif search_by_title != '' and search_by_tags != '':
-            self.queryset = Snippet.objects \
-                .filter(owner=self.request.user,
-                        title__icontains=search_by_title,
-                        tags___tag__title__iexact=search_by_tags)
-        else:
-            self.queryset = Snippet.objects \
-                .filter(owner=self.request.user)
+        # basic query: initially list all of this User's Snippets
+        self.queryset = Snippet.objects.filter(owner=self.request.user)
+
+        # if title search is provided, add to query
+        if search_by_title != '':
+            self.queryset = self.queryset \
+                .filter(title__icontains=search_by_title)
+
+        # if tags are provided, split/clean them, and add to query
+        if search_by_tags != '':
+            tags_list = search_by_tags.split(',')
+            for tag in [t for t in tags_list if not t.isspace()]:
+                self.queryset = self.queryset \
+                    .filter(tags___tag__title__iexact=tag.strip())
+
         return self.list(request, *args, **kwargs)
 
 
