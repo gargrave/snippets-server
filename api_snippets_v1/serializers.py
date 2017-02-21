@@ -75,10 +75,23 @@ class SnippetSerializer(serializers.ModelSerializer):
 # User/Auth Serializers
 ########################################################
 class UserProfileSerializer(serializers.ModelSerializer):
+    categories = serializers.SerializerMethodField()
+
+    def get_categories(self, obj):
+        return {
+            'white': obj.category_name_white,
+            'red': obj.category_name_red,
+            'green': obj.category_name_green,
+            'blue': obj.category_name_blue,
+            'yellow': obj.category_name_yellow,
+            'orange': obj.category_name_orange,
+            'teal': obj.category_name_teal,
+            'gray': obj.category_name_gray
+        }
 
     class Meta:
         model = UserProfile
-        fields = ('pk', 'first_name', 'last_name')
+        fields = ('pk', 'first_name', 'last_name', 'categories')
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):

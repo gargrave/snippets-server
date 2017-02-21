@@ -20,6 +20,15 @@ class UserProfile(BaseModel):
     first_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100, blank=True)
 
+    category_name_white = models.CharField(max_length=16, blank=True)
+    category_name_red = models.CharField(max_length=16, blank=True)
+    category_name_green = models.CharField(max_length=16, blank=True)
+    category_name_blue = models.CharField(max_length=16, blank=True)
+    category_name_yellow = models.CharField(max_length=16, blank=True)
+    category_name_orange = models.CharField(max_length=16, blank=True)
+    category_name_teal = models.CharField(max_length=16, blank=True)
+    category_name_gray = models.CharField(max_length=16, blank=True)
+
 
 class Snippet(BaseModel):
     """
