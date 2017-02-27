@@ -2,6 +2,7 @@ defusedxml==0.4.1
 dj-database-url==0.4.0
 Django==1.9.2
 django-allauth==0.30.0
+django-anymail==0.8
 django-cors-headers==1.2.2
 django-rest-auth==0.9.0
 djangorestframework==3.4.7

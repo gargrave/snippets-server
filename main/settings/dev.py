@@ -22,3 +22,16 @@ CORS_ORIGIN_WHITELIST = (
 # for dev builds, read the secret key from file
 with open('etc/dev_secret_key.txt') as f:
     SECRET_KEY = f.read().strip()
+
+mailgun_api = ''
+with open('etc/mailgun_api.txt') as f:
+    mailgun_api = f.read().strip()
+
+mailgun_domain = ''
+with open('etc/mailgun_domain.txt') as f:
+    mailgun_domain = f.read().strip()
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": mailgun_api,
+    "MAILGUN_SENDER_DOMAIN": mailgun_domain,
+}

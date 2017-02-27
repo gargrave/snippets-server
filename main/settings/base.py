@@ -23,7 +23,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-    'api_snippets_v1'
+    'api_snippets_v1',
+    'anymail'
 )
 
 SITE_ID = 1
@@ -119,4 +120,8 @@ REST_FRAMEWORK = {
     # 'PAGE_SIZE': 5
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+# allauth settings
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+DEFAULT_FROM_EMAIL = "noreply@snippets-app.com"

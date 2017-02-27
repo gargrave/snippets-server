@@ -16,3 +16,8 @@ CORS_ORIGIN_WHITELIST = (
     'https://gargrave-snippets-dev.netlify.com',
     'gargrave-snippets-dev.netlify.com',
 )
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ['MAILGUN_API_KEY'],
+    "MAILGUN_SENDER_DOMAIN": os.environ['MAILGUN_SENDER_DOMAIN'],
+}

@@ -17,3 +17,8 @@ CORS_ORIGIN_WHITELIST = (
     'www.snippets-app.com',
     'snippets-app.com',
 )
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ['MAILGUN_API_KEY'],
+    "MAILGUN_SENDER_DOMAIN": os.environ['MAILGUN_SENDER_DOMAIN'],
+}
