@@ -120,7 +120,9 @@ REST_FRAMEWORK = {
     # 'PAGE_SIZE': 5
 }
 
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+# email backend; swap these two to send real emails
+# EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # allauth settings
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
