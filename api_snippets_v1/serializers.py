@@ -75,7 +75,7 @@ class SnippetSerializer(serializers.ModelSerializer):
 # User/Auth Serializers
 ########################################################
 class UserProfileSerializer(serializers.ModelSerializer):
-    categories = serializers.SerializerMethodField()
+    # categories = serializers.SerializerMethodField()
 
     def get_categories(self, obj):
         return {
@@ -91,7 +91,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('pk', 'first_name', 'last_name', 'categories')
+        fields = ('pk', 'first_name', 'last_name')
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
