@@ -4,6 +4,8 @@ Snippets is my take on a "light bookmarking" app in the spirit of Pocket or Goog
 
 The server code is built with Django + Django Rest Framework, and is deployed on Heroku with a PostgreSQL DB.
 
+You can view the repo for the client-side code [here](https://github.com/gargrave/snippets-client).
+
 # Demo
 
 You can see a dev/demo version [here](https://gargrave-snippets-dev.netlify.com). You can sign up for a new account, and everything should be working (there is no "forgot password" functionality, though, so remember your password). Bear in mind that the server is running a free Heroku instance, so don't be frightened if there are performance issues.
