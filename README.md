@@ -1,53 +1,9 @@
-# Snippets
+# Snippets (server)
 
-## Command Shortcuts
+Snippets is my take on a "light bookmarking" app in the spirit of Pocket or Google Keep. I found that neither of those apps worked exactly the way I wanted them, so I decided to just build my own as a way to learn VueJS. It focuses less on note-taking and image-snipping and more on just being a temporary bookmarking solution--ideal for keeping a link you want to come back to but don't want to commit to with a permanent bookmark in your browser (e.g. a video you're in the middle of watching or a Reddit thread you want to come back to later).
 
-Since we are using multiple settings files, it can be a bit of a nuisance to enter some common commands. Let's create some shortcuts for them!
+The server code is built with Django + Django Rest Framework, and is deployed on Heroku with a PostgreSQL DB.
 
-```sh
-source ../venv_snippets2/bin/activate
-export run="python manage.py runserver --settings=main.settings.dev"
-export static="python manage.py collectstatic --settings=main.settings.dev"
-export test="python manage.py test --settings=main.settings.dev"
-export migrate="python manage.py migrate --settings=main.settings.dev"
-export deploy_dev="git push heroku-dev dev:master"
-export deploy_prod="git push heroku-prod master"
-```
+# Demo
 
-...and here are some pre-typed ones that are probably not common enough to warrant their own shortcuts.
-
-```sh
-python manage.py makemigrations api_snippets_v1 --settings=main.settings.dev
-python manage.py createsuperuser --settings=main.settings.dev
-```
-
----
-
-## Deployment Checklist
-
-- Test dev branch on dev
-  - `git push heroku-dev dev:master`
-- Merge dev/working branch to master
-- Upload to prod
-  - `git push heroku-prod master`
-- Be sure to migrate the Heroku apps as needed!
-
----
-
-## Various
-
-- add `--app APP` to the end of a command to specify which app
-  - `heroku run python manage.py migrate --app snippets-staging`
-- settings:
-  - `heroku config:set DJANGO_SETTINGS_MODULE=main.settings.prod --app snippets-prod`
-
-
-## Deploying to Heroku
-
-```sh
-$ heroku create
-$ git push heroku master
-
-$ heroku run python manage.py migrate
-$ heroku open
-```
+You can see a dev/demo version [here](https://gargrave-snippets-dev.netlify.com). You can sign up for a new account, and everything should be working (there is no "forgot password" functionality, though, so remember your password). Bear in mind that the server is running a free Heroku instance, so don't be frightened if there are performance issues.
